@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  image-converter-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: image-converter-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
+      # API Security
+      - API_KEYS=${API_KEYS:-secure-api-key-1,secure-api-key-2}
+      # Rate Limiting
+      - RATE_LIMIT_MAX=100
+      - RATE_LIMIT_TIME_WINDOW=60000
+      # File Upload Limits (10MB)
+      - MAX_FILE_SIZE=10485760
+      # Image Processing
+      - AVIF_QUALITY=60
+      - WEBP_QUALITY=80
+      - JPEG_QUALITY=85
+      # Sharp Configuration
+      - SHARP_CACHE=100
+      - SHARP_CONCURRENCY=2
+      # Logging
+      - LOG_LEVEL=info
+    volumes:
+      # Optional: Mount for logs
+      - ./logs:/app/logs
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+networks:
+  app-network:
+    driver: bridge
+
+# Optional: Add nginx for production
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: image-converter-nginx
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./ssl:/etc/nginx/ssl:ro
+  #   depends_on:
+  #     - image-converter-api
+  #   networks:
+  #     - app-network
