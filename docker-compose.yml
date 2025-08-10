@@ -5,10 +5,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: image-converter-api
+    # container_name: image-converter-api
     restart: unless-stopped
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000
@@ -32,8 +32,8 @@ services:
     volumes:
       # Optional: Mount for logs
       - ./logs:/app/logs
-    networks:
-      - app-network
+    # networks:
+    #   - app-network
     deploy:
       resources:
         limits:
@@ -43,9 +43,9 @@ services:
           cpus: '0.5'
           memory: 256M
 
-networks:
-  app-network:
-    driver: bridge
+# networks:
+#   app-network:
+#     driver: bridge
 
 # Optional: Add nginx for production
   # nginx:
