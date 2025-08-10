@@ -40,15 +40,23 @@ export class ImageController {
       // Set appropriate content type
       const contentType = this.getContentType(result.format);
       
+      // Generate filename with proper extension
+      const originalName = data.filename || 'image';
+      const baseName = originalName.replace(/\.[^/.]+$/, ''); // Remove original extension
+      const timestamp = Date.now();
+      const filename = `${baseName}-converted-${timestamp}.${result.format}`;
+      
       return reply
         .code(200)
         .header('Content-Type', contentType)
+        .header('Content-Disposition', `attachment; filename="${filename}"`)
         .header('Content-Length', result.size)
         .header('X-Original-Size', validation.size)
         .header('X-Compression-Ratio', `${result.compressionRatio}%`)
         .header('X-Image-Format', result.format)
         .header('X-Image-Width', result.metadata.width)
         .header('X-Image-Height', result.metadata.height)
+        .header('X-Filename', filename)
         .send(result.data);
         
     } catch (error) {
@@ -94,12 +102,20 @@ export class ImageController {
       
       const contentType = this.getContentType(result.format);
       
+      // Generate filename with proper extension
+      const originalName = data.filename || 'image';
+      const baseName = originalName.replace(/\.[^/.]+$/, '');
+      const timestamp = Date.now();
+      const filename = `${baseName}-compressed-${timestamp}.${result.format}`;
+      
       return reply
         .code(200)
         .header('Content-Type', contentType)
+        .header('Content-Disposition', `attachment; filename="${filename}"`)
         .header('Content-Length', result.size)
         .header('X-Original-Size', validation.size)
         .header('X-Compression-Ratio', `${result.compressionRatio}%`)
+        .header('X-Filename', filename)
         .send(result.data);
         
     } catch (error) {
@@ -155,13 +171,21 @@ export class ImageController {
       
       const contentType = this.getContentType(result.metadata.format);
       
+      // Generate filename with proper extension
+      const originalName = data.filename || 'image';
+      const baseName = originalName.replace(/\.[^/.]+$/, '');
+      const timestamp = Date.now();
+      const filename = `${baseName}-resized-${timestamp}.${result.metadata.format}`;
+      
       return reply
         .code(200)
         .header('Content-Type', contentType)
+        .header('Content-Disposition', `attachment; filename="${filename}"`)
         .header('Content-Length', result.size)
         .header('X-Original-Size', validation.size)
         .header('X-Image-Width', result.metadata.width)
         .header('X-Image-Height', result.metadata.height)
+        .header('X-Filename', filename)
         .send(result.data);
         
     } catch (error) {
@@ -222,15 +246,23 @@ export class ImageController {
       
       const contentType = this.getContentType(result.format);
       
+      // Generate filename with proper extension
+      const originalName = data.filename || 'image';
+      const baseName = originalName.replace(/\.[^/.]+$/, '');
+      const timestamp = Date.now();
+      const filename = `${baseName}-processed-${timestamp}.${result.format}`;
+      
       return reply
         .code(200)
         .header('Content-Type', contentType)
+        .header('Content-Disposition', `attachment; filename="${filename}"`)
         .header('Content-Length', result.size)
         .header('X-Original-Size', validation.size)
         .header('X-Compression-Ratio', `${result.compressionRatio}%`)
         .header('X-Image-Format', result.format)
         .header('X-Image-Width', result.metadata.width)
         .header('X-Image-Height', result.metadata.height)
+        .header('X-Filename', filename)
         .send(result.data);
         
     } catch (error) {
